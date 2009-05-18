@@ -27,8 +27,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace Gaiaware.Salesforce
 {
@@ -99,78 +97,5 @@ namespace Gaiaware.Salesforce
             // otherwise return empty string
             return string.Empty;
         }
-
-        #region Nested type: CryptoHelper
-
-        protected sealed class CryptoHelper
-        {
-            private const string _privatekey = @"<RSAKeyValue>
-  <Modulus>oYBAgHS60X/3QoBnnK+YdcoPbyDA/rRpPwlNt5cnmI89BT6YQ8C3jNe6OD0IY7lYQBC1BCsjuj+wholXcH7zpzRBgAQ0pet3mEWJTgtI/kPJdDBTbxlF721AMhi5PLLCj5sDIJ0ItXu5nYe/OYlzqQQsZ6Y7TJIrnZIeDK70aeE=</Modulus>
-  <Exponent>AQAB</Exponent>
-  <P>ziy2+dGDjkW6B2kTVq4xsRP72HIPjuJ3PPaLgjWR2bovhSmZDVYA+zExiJNx2/PpmwhKS+Ofikh/ASDzyl6evw==</P>
-  <Q>yIe8sr8FmMAK9cLNfe0WzPeK7SG0VGXwO4OGEuF88TnhgCB47WkMc+dHup0EzwTpUGVN9VSDEoy7Tohdc1m/Xw==</Q>
-  <DP>RP8ZzMicqgQTmV9EpYFuB8CUS38ATeTj2nb3gP/Ea4SvWnTtT1U0xttTpE0TkXQy/TrtAjCOt4xDVHFepJ69qQ==</DP>
-  <DQ>XSV/51+Hz/5UmPfV0AqTLr5FkAS56QI45swfOSH4kWybbJKo2U6UdDoYPXy2QRs87RVBcxXAlJs+XipFjlE/7Q==</DQ>
-  <InverseQ>dpY7Al3HFq7HgcLnvZLWYlU0qYSUSWWkLMZphkA0E+7cB5r1pMfIKx6XjyEuVbib9wWedOHzgHSnCXj9401dmw==</InverseQ>
-  <D>WzUnOGS0LSTr627BFUhF/h/DX6tL04zn82W5snl3Lz2V5KRZMcpg3vXmgWRWnJtML8I/uL70Snc1poViEHJh/6Jeyh2k3WpELmKsAMXkjMfEX5Tt8i9no6SlUC+HJA3KHMtJ2+3jUzjuuKDPT1Z+YPNQr6gIhWW9CAm8CzAEDVE=</D>
-</RSAKeyValue>";
-
-            private const string _publicKey = @"<RSAKeyValue>
-  <Modulus>oYBAgHS60X/3QoBnnK+YdcoPbyDA/rRpPwlNt5cnmI89BT6YQ8C3jNe6OD0IY7lYQBC1BCsjuj+wholXcH7zpzRBgAQ0pet3mEWJTgtI/kPJdDBTbxlF721AMhi5PLLCj5sDIJ0ItXu5nYe/OYlzqQQsZ6Y7TJIrnZIeDK70aeE=</Modulus>
-  <Exponent>AQAB</Exponent>
-</RSAKeyValue>";
-
-            private byte[] CreateSignature(byte[] plainTextBytes)
-            {
-                var rsa = new RSACryptoServiceProvider();
-                rsa.FromXmlString(_privatekey);
-
-                byte[] hash = HashAlgorithm.Create("SHA1").ComputeHash(plainTextBytes);
-                var formatter = new RSAPKCS1SignatureFormatter(rsa);
-                formatter.SetHashAlgorithm("SHA1");
-                return formatter.CreateSignature(hash);
-            }
-
-            public string GetSignature(string data)
-            {
-                // retrieve the first 20 characters to be used as the SHA1
-                int length = Math.Min(data.Length, 20);
-                var plainTextBytes = new byte[20];
-                Encoding.UTF8.GetBytes(data, 0, length, plainTextBytes, 0);
-
-                byte[] signature = CreateSignature(plainTextBytes);
-
-                // return the string as a Base64 encoded string
-                return string.Format("{0}", Convert.ToBase64String(signature));
-            }
-
-            public bool VerifySignature(byte[] data, byte[] signature)
-            {
-                var rsa = new RSACryptoServiceProvider();
-                rsa.FromXmlString(_publicKey);
-
-                byte[] hash = HashAlgorithm.Create("SHA1").ComputeHash(data);
-
-                var deformatter = new RSAPKCS1SignatureDeformatter(rsa);
-                deformatter.SetHashAlgorithm("SHA1");
-                bool messageIsValid = deformatter.VerifySignature(hash, signature);
-
-                return messageIsValid;
-            }
-
-            public bool VerifySignature(string data, string publicSignature)
-            {
-                byte[] signature = Convert.FromBase64String(publicSignature);
-
-                // extract 20 bytes from the signature part to be used as SHA1
-                var plainTextBytes = new byte[20];
-                int length = Math.Min(data.Length, 20);
-                Encoding.UTF8.GetBytes(data, 0, length, plainTextBytes, 0);
-
-                return VerifySignature(plainTextBytes, signature);
-            }
-        }
-
-        #endregion
     }
 }
