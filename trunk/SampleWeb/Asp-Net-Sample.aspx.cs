@@ -42,5 +42,13 @@ namespace SampleWeb
             Account account = new AccountController().GetByName(txtAccountSearch.Text);
             lblAccountResult.Text = account != null ? account.Name : "No result";
         }
+
+        protected void btnGetContactsByAccountId_Click(object sender, EventArgs e)
+        {
+            foreach (Contact contact in new ContactController().GetContactsByAccountId(txtAccountId.Text))
+            {
+                lblContacts.Text += "<br />" + contact.Name;
+            }
+        }
     }
 }

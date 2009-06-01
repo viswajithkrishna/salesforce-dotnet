@@ -11,12 +11,22 @@
     <div>
     
         <asp:Button ID="btnSearchAccount" runat="server" 
-            Text="Search accounts ny name:" onclick="btnSearchAccount_Click" 
-             />
+            Text="Search accounts ny name:" onclick="btnSearchAccount_Click" />
         <asp:TextBox ID="txtAccountSearch" runat="server"></asp:TextBox>
     
         <br />
         <asp:Label ID="lblAccountResult" runat="server"></asp:Label>
+        <br />
+        <br />
+    
+        <asp:Button ID="btnGetContactsByAccountId" runat="server" 
+            Text="Get contacts by accountId:" onclick="btnGetContactsByAccountId_Click" 
+             />
+        <asp:TextBox ID="txtAccountId" runat="server"></asp:TextBox>
+    
+        <br />
+    
+        <asp:Label ID="lblContacts" runat="server"></asp:Label>
         <br />
         <br />
     
