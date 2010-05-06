@@ -1,0 +1,19 @@
+#summary General outline of a road map for the salesforce-dotnet project. Cherry picking things to improve.
+
+= Introduction =
+
+Few conversations recently with committers on what to add, based on the brief to do list on the project homepage. Mostly around things to improve.
+
+ * better support batch updates/adds
+ * better support for receiving complex objects
+ * better error handling
+ * better logging
+ * query via LINQ: LinqToSalesforce?
+ * unit testing
+
+= Details =
+
+Starting simple.  Rolling in some Unit Testing with [http://www.nunit.org/ NUnit]:
+  * mteece has a separate project using *salesforce-dotnet* with [http://www.nunit.org/ NUnit]
+  * Create a branch from trunk see what can be incorporated
+  * Some restructuring may have to take place, e.g. new folders like src/, /nunit/ so that everything is incorporated (read nobody has to run around downloading stuff)
