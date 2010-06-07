@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaiaware.SalesforceWrapper"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWeb", "SampleWeb\SampleWeb.csproj", "{79D9444C-4D5A-4745-9D83-0D7C36027221}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesforceDotNet.Tests.Salesforce.Unit", "SalesforceDotNet.Tests.Unit\SalesforceDotNet.Tests.Salesforce.Unit.csproj", "{4A600031-B980-411A-AB1C-7FC5B9FCEBF1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5B803F62-063D-43CE-A7FB-DC176511D359}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,8 +29,15 @@ Global
 		{79D9444C-4D5A-4745-9D83-0D7C36027221}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79D9444C-4D5A-4745-9D83-0D7C36027221}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79D9444C-4D5A-4745-9D83-0D7C36027221}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A600031-B980-411A-AB1C-7FC5B9FCEBF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A600031-B980-411A-AB1C-7FC5B9FCEBF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A600031-B980-411A-AB1C-7FC5B9FCEBF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A600031-B980-411A-AB1C-7FC5B9FCEBF1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4A600031-B980-411A-AB1C-7FC5B9FCEBF1} = {5B803F62-063D-43CE-A7FB-DC176511D359}
 	EndGlobalSection
 EndGlobal
