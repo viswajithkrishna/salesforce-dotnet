@@ -16,7 +16,7 @@ namespace SalesforceDotNet.Tests.Unit.Leads
 		/// Add a new Lead.
 		/// </summary>
 		[Test]
-		public void ShouldCreateCreateLead()
+		public void ShouldAddLead()
 		{
 			Lead lead = new Lead();
 			LeadController leadController = new LeadController();
@@ -60,7 +60,7 @@ namespace SalesforceDotNet.Tests.Unit.Leads
 		public void ShouldFindLeadByEmail()
 		{
 			Lead lead = new LeadController().GetByEmail("unit.test@pixelmedia.com");
-			Assert.AreEqual(lead.Company, "Unit Test Incorporated");
+			Assert.AreEqual("NUnit", lead.Title);
 		}
 		#endregion tests
 	}
