@@ -77,6 +77,7 @@ namespace Gaiaware.Salesforce
                 if (_binding == null)
                 {
                     _binding = new SforceServiceGzip(true, true);
+					_binding.EnableDecompression = true;
                 }
 
                 return _binding;

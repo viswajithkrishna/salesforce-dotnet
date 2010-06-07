@@ -25,15 +25,79 @@
  * THE SOFTWARE.
  */
 
+using System;
+using System.Text;
+using Gaiaware.Salesforce;
+
 namespace Gaiaware.SalesforceWrapper.Utilities
 {
     public class SforceFields
     {
+		public static string LeadFields
+		{
+			get { return GetAllFieldsStringForSObject(new string[] { "Lead" }); }
+		}
+
         //TODO: improve the way of doing this
-        public const string LeadFields = "id, email, firstname, lastname, leadsource, rating, status, Country, HasOptedOutOfEmail, CreatedDate";
+        //public string LeadFields = "id, email, firstname, lastname, leadsource, rating, status, Country, HasOptedOutOfEmail, CreatedDate";
         public const string AccountFields = "id, name, website, phone, billingstreet, billingcity, billingstate, billingpostalcode, billingcountry";
         public const string ContactFields = "id, accountid, name, firstname, lastname, email";
         public const string ContractFields = "id, accountid, ContractNumber, ActivatedDate, companysignedid, customersignedid, createdbyid, createddate, customersigneddate, startdate, enddate, ownerid, status";
         public const string ProductFields = "Name, Description, Id, IsActive, ProductCode";
+
+
+		private static string GetAllFieldsStringForSObject(string[] sObjects)
+		{
+			StringBuilder FieldList = new StringBuilder(String.Empty);
+
+			try
+			{
+				DescribeSObjectResult[] describeSObjectResult = SforceProvider.Instance.SFBinding.describeSObjects(sObjects);
+
+				// Retrieve fields from the results
+				Field[] fields = describeSObjectResult[0].fields;
+
+				// Get the name of the object
+				String objectName = describeSObjectResult[0].name;
+
+				// Get some flags
+				bool isActivateable = describeSObjectResult[0].activateable;
+				// Many other values are accessible
+
+				if (fields != null)
+				{
+					// Add id to the list
+					FieldList.Append("Id, ");
+
+					// Iterate through the fields to get properties for each field
+					for (int i = 0; i < fields.Length; i++)
+					{
+
+						// Boolean	Indicates whether the field is updateable (true) or not (false). If true, then this field value can be set in an update() call.	
+						if (fields[i].updateable)
+						{ 
+							if (i == fields.Length - 1)
+							{
+
+								FieldList.Append(fields[i].name);
+							}
+							else
+							{
+
+								FieldList.Append(fields[i].name + ", ");
+							}
+						}
+					}
+				}
+
+			}
+			catch
+			{
+				throw (new Exception("Unable to get field names for Salesforce."));
+			}
+
+			return FieldList.ToString();
+		}
+
     }
 }
