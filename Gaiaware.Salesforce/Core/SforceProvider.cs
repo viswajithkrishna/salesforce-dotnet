@@ -116,9 +116,36 @@ namespace Gaiaware.Salesforce
                             return false;
                         }
 
-                        SFBinding.SessionHeaderValue = new SessionHeader();
-                        SFBinding.Url = _loginResult.serverUrl;
-                        SFBinding.SessionHeaderValue.sessionId = _loginResult.sessionId;
+
+                        try
+                        {
+                            SFBinding.SessionHeaderValue = new SessionHeader();
+                            SFBinding.Url = _loginResult.serverUrl;
+                            SFBinding.SessionHeaderValue.sessionId = _loginResult.sessionId;
+                        }
+                        catch (SoapException soapEx)
+                        {
+                            bool sessionExpired = soapEx.Code.Name.Contains("INVALID_SESSION_ID");
+
+                            // if the session has staled, we set _isLoggedIn to false and try 3 times to re-login to salesforce and
+                            // re-execute the query statement;
+                            if (sessionExpired)
+                            {
+                                Logout();
+                                if (_loginRetryCount-- > 0)
+                                {
+                                    Login();
+                                }
+                                else
+                                {
+                                    throw soapEx;
+                                }
+                            }
+                            else
+                            {
+                                throw soapEx;
+                            }
+                        }
 
                         _isLoggedIn = true;
                         _loginRetryCount = 3;
@@ -144,7 +171,13 @@ namespace Gaiaware.Salesforce
 
         private bool LoginAndVerify()
         {
-            return !((_isLoggedIn == false) && (Login() == false));
+            bool valid = !((_isLoggedIn == false) && (Login() == false));
+            if (valid)
+            {
+                _isLoggedIn = false;
+                valid = Login();
+            }
+            return valid;
         }
 
 
@@ -184,7 +217,15 @@ namespace Gaiaware.Salesforce
             return null;
         }
 
-
+        public void Logout()
+        {
+            if (_isLoggedIn)
+            {
+                _binding.logout();
+                _binding = null;
+                _isLoggedIn = false;
+            }
+        }
 
         /// <summary>
         /// Lists all objects based on a fieldList. 
